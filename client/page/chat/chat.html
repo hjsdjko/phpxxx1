@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>意见反馈</title>
+    <link rel="stylesheet" href="../../static/modules/elementui/theme/index.css">
+    <link rel="stylesheet" href="../../static/modules/animate.min.css">
+    <script src="../../static/modules/wow.min.js"></script>
+    <link rel="stylesheet" href="../../static/css/app.css">
+    <link rel="stylesheet" href="../../static/css/index.css">
+    <script src="../../static/modules/vue.min.js"></script>
+    <script src="../../static/modules/elementui/index.js"></script>
+    <script src="../../static/iconfont/iconfont.js"></script>
+</head>
+<body>
+<div id="page" v-cloak>
+    <div class="container">
+        <div class="header">意见反馈</div>
+        <div class="chat-content">
+            <div class="chat-round" v-for="item in chatList" :key="item.id">
+                <div class="chat-time" v-if="item.showTime">{{item.addtime}}</div>
+                <div v-if="item.ask" class="left-content" >
+                    <el-alert v-if="!item.img" class="text-content" :title="item.ask" :closable="false" type="success"></el-alert>
+                    <el-image v-if="item.img" :src="baseUrl + item.img" :preview-src-list="[baseUrl+item.img]"></el-image>
+                </div>
+                <div v-if="item.reply" class="right-content">
+                    <el-alert v-if="!item.img" class="text-content" :title="item.reply" :closable="false" type="warning"></el-alert>
+                    <el-image v-if="item.img" :src="baseUrl + item.img" :preview-src-list="[baseUrl+item.img]"></el-image>
+                </div>
+            </div>
+        </div>
+        <div class="option-row">
+            <el-upload :action="baseUrl+'/file/upload'" :on-success="uploadSuccess"
+                       :show-file-list="false">
+                                    <iconfont icon="el-icon-picture-outline"></iconfont>
+                            </el-upload>
+        </div>
+        <div class="input-box">
+            <el-input v-model="chatForm.ask" placeholder="请输入内容" type="textarea" :rows="5" ></el-input>
+        </div>
+        <div class="submit-box">
+            <el-button type="primary" @click="askSave" size="small">发送</el-button>
+        </div>
+    </div>
+</div>
+</body>
+<script src="../../static/modules/axios.min.js"></script>
+<script src="../../utils/http.js"></script>
+<script src="../../utils/global_mixin.js"></script>
+<script src="../../utils/toolUtil.js"></script>
+
+<script>
+var vm = new Vue({
+    el: '#page',
+    data(){
+        return{
+            chatForm:{
+                ask:'',
+            },
+            userid:toolUtil.storageGet('userid'),
+            chatList:[],
+
+        }
+    },
+    created(){
+        this.getChatList()
+        setInterval(()=>{
+            this.getChatList()
+        },3000)
+    },
+    methods: {
+        changeIntelligent(b){
+            this.intelligent = b
+            if(b){
+                this.saveChathelper("请输入您的问题")
+            }else{
+                this.saveChathelper("正在呼叫客服，请先描述您的问题")
+            }
+        },
+        uploadSuccess(e){
+            http.post('chat/add',{
+                ask: 'file/' + e.file,
+                userid: this.userid
+            }).then(res=>{
+                this.$message.success('发送成功')
+                this.getChatList()
+                this.chatForm.ask = ''
+            })
+        },
+        askSave(){
+            if(!this.chatForm.ask || !this.chatForm.ask.trim())return this.$message.error("请输入内容")
+            http.post('chat/add',this.chatForm).then(res=>{
+                this.$message.success('发送成功')
+                this.chatForm.ask = ""
+                this.getChatList()
+            })
+        },
+        getChatList(){
+            http.get('chat/page',{
+                params: {
+                    limit: 1000,
+                    sort: 'addtime',
+                    order: 'asc',
+                    userid: this.userid
+                }
+            }).then(res=>{
+                let list = res.data.data.list.map((item,index)=>{
+                    if(item.ask){
+                        if(/^file\//.test(item.ask)){
+                            item.img = item.ask
+                        }
+                    }
+                    if(item.reply){
+                        if(/^file\//.test(item.reply)){
+                            item.img = item.reply
+                        }
+                    }
+                    if(index==0){
+                        item.showTime = true
+                    }else{
+                        let jian = new Date(item.addtime).getTime() - new Date(res.data.data.list[index-1].addtime).getTime()
+                        if(jian>18000){
+                            item.showTime = true
+                        }else{
+                            item.showTime = false
+                        }
+                    }
+                    return item
+                })
+                this.chatList = list
+                this.$nextTick(()=>{
+                    let dom = document.getElementsByClassName('chat-content')[0]
+                    setTimeout(() => {
+                        if (dom && dom.scrollTop==0)dom.scrollTop = dom.scrollHeight
+                    }, 100)
+                })
+            })
+        },
+    }
+})
+</script>
+<style>
+#page {
+    min-height: 100vh;
+    background-color: #ededed;
+    display: flex;
+    align-items: center;
+}
+.container {
+    width: 800px;
+    background-color: #ffffff;
+    margin: 0 auto;
+    padding: 0 30px;
+    border-radius: 16px;
+}
+.header {
+    text-align: center;
+    padding: 20px;
+    font-weight: 700;
+}
+.chat-content {
+    background-color: #f2f2f2;
+    padding: 50px 30px;
+    height: 46vh;
+    overflow-y: auto;
+}
+.left-content {
+    display: flex;
+    margin-top: 10px;
+}
+.right-content {
+    margin-top: 10px;
+    display: flex;
+    flex-direction: row-reverse;
+}
+.chat-time {
+    text-align: center;
+    color: #999;
+    font-size: 12px;
+}
+.text-content {
+    width: auto;
+    text-align: left;
+}
+.option-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px;
+}
+.el-upload .iconfont {
+    font-size: 34px;
+    cursor: pointer;
+}
+.submit-box {
+    padding: 20px 0;
+    text-align: right;
+}
+.chat-round .el-image {
+    width: 180px;
+    background: #fff;
+    padding: 10px;
+    border-radius: 8px;
+}
+.chat-round .el-image {
+    max-height: 140px;
+}
+.chat-round img {
+    object-fit: fill;
+}
+
+</style>
+</html>

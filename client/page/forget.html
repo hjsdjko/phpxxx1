@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>找回密码</title>
+    <link rel="stylesheet" href="../static/modules/elementui/theme/index.css">
+    <link rel="stylesheet" href="../static/modules/animate.min.css">
+    <script src="../static/modules/wow.min.js"></script>
+    <link rel="stylesheet" href="../static/css/app.css">
+    <link rel="stylesheet" href="../static/css/index.css">
+    <script src="../static/modules/vue.min.js"></script>
+    <script src="../static/modules/elementui/index.js"></script>
+    <script src="../static/iconfont/iconfont.js"></script>
+</head>
+<body>
+<el-container id="page" v-cloak>
+    <el-main id="main">
+        <div class="forget-wrapper">
+            <div class="from-name">找回密码</div>
+            <el-steps ref="steps" :active="pageType" class="steps" :align-center="true" finish-status="success" >
+                <el-step title="获取密保" >
+                </el-step>
+                <el-step title="验证密保" >
+                </el-step>
+                <el-step title="重置密码" >
+                </el-step>
+            </el-steps>
+            <el-form :model="forgetForm" class="forget-form" size="small" >
+            </el-form>
+            <div class="btns">
+                <el-button v-if="pageType==0" class="getSecurity" type="primary" @click="getSecurity">获取密保</el-button>
+                <el-button v-if="pageType==1" class="validateSecurity" type="primary" @click="validateSecurity">确认密保</el-button>
+                <el-button v-if="pageType==2" class="updatePassword" type="primary" @click="updatePassword">重置密码</el-button>
+            </div>
+        </div>
+    </el-main>
+</el-container>
+</body>
+<script src='../static/modules/axios.min.js'></script>
+<script src="../utils/http.js"></script>
+<script src="../utils/system.js"></script>
+<script src="../utils/global_mixin.js"></script>
+<script src="../utils/toolUtil.js"></script>
+
+<script src="../components/page-header.js"></script>
+<script>
+    var vm = new Vue({
+        el: '#page',
+        data(){
+            return {
+                pageType:1,
+                forgetForm:{},
+                userForm:{},
+            }
+        },
+        methods: {
+        },
+
+    })
+</script>
+<script>
+//须先设置css盒子的animation-duration
+
+new WOW({
+    boxClass: 'search-box', //目标dom的class
+    animateClass: 'animate__fadeInDown', //动画名
+}).init()
+
+new WOW({
+    boxClass: 'recommend-box',
+    animateClass: 'animate__fadeInUp',
+}).init()
+
+new WOW({
+    boxClass: 'about-box',
+    animateClass: 'animate__fadeInUp',
+}).init()
+
+new WOW({
+    boxClass: 'show-box',
+    animateClass: 'animate__fadeInLeft',
+}).init()
+
+new WOW({
+    boxClass: 'news-box',
+    animateClass: 'animate__fadeInRight',
+}).init()
+
+new WOW({
+    boxClass: 'systemInfo-box',
+    animateClass: 'animate__fadeInUp',
+}).init()
+
+
+</script>
+<style>
+
+
+
+#page {
+}
+
+
+#main{
+    background: url("http://clfile.zggen.cn/20231020/67e7bc0be6f14fe6964350c99487b3c7.jpg") no-repeat center center / cover;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+
+.forget-wrapper{
+    background: url(http://clfile.zggen.cn/20231020/5333a9813e004bb8a7463aa34fcb11e1.jpg) no-repeat left center / 600px 100%,#fff;
+    box-sizing: border-box;
+    padding: 0 0 0 600px;
+    width: 1200px;
+    min-height:500px;
+    border: 0px solid rgb(255, 255, 255);
+    z-index: 1;
+   box-shadow:0px 1px 5px #999;
+}
+
+
+.forget-wrapper .from-name{
+    padding: 10px 0px;
+    margin: 0px 0px 40px;
+    color: #fff;
+    background: var(--swiper-theme-color);
+    width: 100%;
+    font-size: 22px;
+    line-height: 40px;
+    text-align: center;
+    animation-name: fadeInDown;
+    animation-duration: 1s;
+}
+
+
+.steps{
+    padding: 0px 10%;
+    margin-bottom: 40px;
+    animation-name:fadeInUp;
+    animation-duration:1s;
+}
+
+
+.forget-form{
+    padding: 0 0px;
+}
+
+
+.forget-form .el-form-item {
+    display:flex;
+    animation-name: fadeInUp;
+    animation-duration: 2s;
+}
+
+
+.forget-form label.el-form-item__label {
+    min-width: 150px;
+}
+
+
+.forget-form .el-form-item__content {
+    width: calc(100% - 250px);
+    margin-left:0px !important;
+}
+
+
+.forget-form .el-input__inner{
+    border:1px solid #eee;
+    border-radius:0px;
+}
+.forget-form .el-input__inner:hover,.forget-form .el-input__inner:focus{
+border:1px solid var(--hover-border-color);
+}
+
+
+.btns{
+  width:100%;
+}
+
+
+.btns .el-button--primary {
+    width: calc(100% - 250px);
+    margin-left:150px;
+    border-radius:0px;
+    color: #fff;
+    border-color: var(--swiper-theme-color);
+    background:var(--swiper-theme-color);
+    animation-name: fadeInUp;
+    animation-duration: 1s;
+}
+.btns .el-button--primary:focus,.btns .el-button--primary:hover {
+    color: #fff
+    border-color: #333;
+    background: #333;
+}
+
+</style>
+</html>

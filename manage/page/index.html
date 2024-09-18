@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>基于PHP的新闻管理系统设计与实现</title>
+    <link rel="stylesheet" href="../static/modules/elementui/theme/index.css">
+    <link rel="stylesheet" href="../static/css/app.css">
+    <link rel="stylesheet" href="../static/css/index.css">
+    <link rel="stylesheet" href="../static/modules/animate.min.css">
+    <script src="../static/modules/wow.min.js"></script>
+    <script src="../static/modules/vue.min.js"></script>
+    <script src="../static/modules/elementui/index.js"></script>
+    <script src="../static/iconfont/iconfont.js"></script>
+</head>
+<body>
+<el-container id="page" v-cloak>
+    <el-header height="auto">
+        <page-header></page-header>
+    </el-header>
+    <el-container>
+    <page-aside>
+        <template v-slot:menu>
+            <page-menus></page-menus>
+        </template>
+    </page-aside>
+        <el-main>
+            <div id="child-page">
+            </div>
+        </el-main>
+    </el-container>
+</el-container>
+</body>
+<script src="../static/modules/axios.min.js"></script>
+<script src="../utils/http.js"></script>
+<script src="../utils/toolUtil.js"></script>
+<script src="../utils/global_mixin.js"></script>
+<!--引入组件-->
+<script src="../components/pageHeader.js"></script>
+<script src="../components/pageMenus.js"></script>
+<script src="../components/pageAside.js"></script>
+<script>
+    var vm = new Vue({
+        el: '#page',
+        data(){
+            return {
+            }
+        },
+        mounted(){
+        },
+        methods: {
+            getCountList(){
+            },
+            //权限验证
+            btnAuth(e,a){
+                return toolUtil.isAuth(e,a)
+            },
+            getChartList(){
+            },
+        }
+    })
+</script>
+<style>
+
+.count_list {
+  display: flex;
+  justify-content: center;
+  grid-column-gap: 20px;
+  padding:10px;
+}
+
+
+.count_item {
+  box-shadow: 0 0px 0px 0 rgba(0,0,0,.1);
+  border-radius: 0px;
+  padding: 14px 20px;
+  flex: 1;
+}
+.count_item:nth-child(1){
+    background:#056cae;
+    animation-name: fadeInUp;
+    animation-duration: 1s;
+ } 
+.count_item:nth-child(2){
+    background:#056cae99;
+    animation-name: fadeInUp;
+    animation-duration: 1.5s;
+ } 
+.count_item:nth-child(3){
+    background:#056cae80;
+    animation-name: fadeInUp;
+    animation-duration: 2s;
+ }
+.count_item:nth-child(4){
+    background:#056cae60;
+    animation-name: fadeInUp;
+    animation-duration: 2.5s;
+ }
+.count_item:nth-child(5){
+    background:#056cae40;
+    animation-name: fadeInUp;
+    animation-duration: 3s;
+ }
+
+
+.count_item .item-head {
+  width:100%;
+  display: flex;
+  font-size: 16px;
+}
+
+.count_item .item-head-title {
+  margin-right: auto;
+  color: #fff;
+}
+.count_item .el-icon-close {
+  margin-left: 6px;
+  cursor: pointer;
+}
+
+
+.count_item .item-content{
+  display: flex;
+  flex-wrap:wrap;
+  justify-content: center;
+}
+
+
+.count_item .item_title{
+  width:100%;
+  text-align:center;
+  line-height: 40px;
+  font-size: 14px;
+  color: #fff;
+  order:2;
+}
+
+.count_item .item_num{
+  width:100%;
+  text-align:center;
+  font-size: 24px;
+  color: #fff;
+  font-weight: 500;
+  font-family: cursive;
+}
+
+
+.chart_list{
+  display: flex;
+  flex-wrap: wrap;
+  margin-top: 50px;
+  justify-content: center;
+  animation-name: fadeInUp;
+  animation-duration: 2s;
+}
+
+
+.chart_list .chart_item{
+  flex: 1;
+  min-width: 32%;
+  padding:10px;
+  margin-bottom: 20px;
+}
+
+.chart_list .chart_item .Echart{
+  width:100%;
+  height: 400px;
+  background:#056cae05;
+  padding:10px;
+  border:1px solid #056cae10;
+}
+
+</style>
+</html>
